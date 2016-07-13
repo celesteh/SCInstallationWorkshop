@@ -48,23 +48,39 @@ Depending on your setup, you may need to modify your script, to tell jack what s
 * Is the script running on a pi? Here's an example section of bash:
 
 `#are we on a raspberry pi`
+
 `if \[ -f /etc/rpi-issue \]`
+
 `    then`
+
 `        raspberry=1`
+
 `       # do pi specific stuff`
+
 `    else`
+
 `        raspberry=0`
+
 `fi`
+
 `# . . . Do other things , then, later in the script....`
+
 `# Do something only if we're NOT on a pi`
+
 `if \[ $raspberry -eq 0 \]`
+
 `    then`
+
 `       #...`
+
 `fi`
 
 * Raise amplitude if you're using HDMI
+
 `# Set audio for HDMI`
+
 `amixer cset numid=3 2`
+
 `amixer set PCM 87%`
 
 
@@ -78,13 +94,17 @@ Do not use the start on boot instructions in the installation guide, as they don
 Create a file your\_installtion\_name.desktop . Put in it:
 
 `\[Desktop Entry\]`
+
 `Name=YourInstallationNameNoSpaces`
+
 `Exec=/home/pi/Documents/where/you/put/your/code/installation.sh`
+
 `Type=application`
 
 This will tell the GUI to start your istallation. run the following commands:
 
 `mkdir ~/.config/autostart`
+
 `cp your\_installtion\_name.desktop ~/.config/autostart/`
 
 ### Headless
