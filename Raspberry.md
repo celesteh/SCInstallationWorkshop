@@ -87,10 +87,10 @@ Create a file your\_installtion\_name.desktop . Put in it:
 `Exec=/home/pi/Documents/where/you/put/your/code/installation.sh`  
 `Type=application`  
 
-This will tell the GUI to start your istallation. run the following commands:
+Change the Exec line to your path and actually script name. This will tell the GUI to start your istallation. run the following commands:
 
 `mkdir ~/.config/autostart`  
-`cp your\_installtion\_name.desktop ~/.config/autostart/`
+`cp your_installtion_name.desktop ~/.config/autostart/`
 
 ### Headless
 
