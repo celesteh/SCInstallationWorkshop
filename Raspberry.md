@@ -15,11 +15,11 @@ The headphone jack on the Pi is not useable and your fancy sound card may or may
 
 ## Preparation
 
-However, the version of SuperCollider that comes with the Pi is old and broken.
+Alas, the version of SuperCollider that comes with the Pi is old and broken.
 
 There are instructions for compiling it on Raspbian Jessie at: https://supercollider.github.io/development/building-raspberrypi  Note it starts with the -lite version of the raspbian operating system. Scroll down if you've got the normal version.
 
-After you do the `apt-get install`, do one extra command: `sudo apt-get install xvfb`
+After you do the `apt-get install . . .`, do one extra command: `sudo apt-get install xvfb`
 
 ## Backup your SD cards
 
@@ -48,7 +48,7 @@ Depending on your setup, you may need to modify your script, to tell jack what s
 * Is the script running on a pi? Here's an example section of bash:
 
 `#are we on a raspberry pi`  
-`if \[ -f /etc/rpi-issue \]`  
+`if [ -f /etc/rpi-issue ]`  
 `    then`  
 `        raspberry=1`  
 `       # do pi specific stuff`  
@@ -57,7 +57,7 @@ Depending on your setup, you may need to modify your script, to tell jack what s
 `fi`  
 `# . . . Do other things , then, later in the script....`  
 `# Do something only if we're NOT on a pi`  
-`if \[ $raspberry -eq 0 \]`  
+`if [ $raspberry -eq 0 ]`  
 `    then`  
 `       #...`  
 `fi`  
@@ -82,7 +82,7 @@ Do not use the start on boot instructions in the installation guide, as they don
 
 Create a file your\_installtion\_name.desktop . Put in it:
 
-`\[Desktop Entry\]`  
+`[Desktop Entry]`  
 `Name=YourInstallationNameNoSpaces`  
 `Exec=/home/pi/Documents/where/you/put/your/code/installation.sh`  
 `Type=application`  
@@ -144,7 +144,7 @@ Change the names and paths to reflect your actualy names and paths. Note that th
 
 For the script above, named your_installation, we need to execute the following commands:
 
-* `sudo chmod 755 /etc/init.d/your_installation`
+* `sudo chmod 755 /etc/init.d/your_installation`  
 * `sudo update-rc.d your_installation defaults`
 
 Note:
