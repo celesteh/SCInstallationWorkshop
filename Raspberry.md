@@ -47,43 +47,32 @@ Depending on your setup, you may need to modify your script, to tell jack what s
 
 * Is the script running on a pi? Here's an example section of bash:
 
-`#are we on a raspberry pi`
-
-`if \[ -f /etc/rpi-issue \]`
-
-`    then`
-
-`        raspberry=1`
-
-`       # do pi specific stuff`
-
-`    else`
-
-`        raspberry=0`
-
-`fi`
-
-`# . . . Do other things , then, later in the script....`
-
-`# Do something only if we're NOT on a pi`
-
-`if \[ $raspberry -eq 0 \]`
-
-`    then`
-
-`       #...`
-
-`fi`
+`#are we on a raspberry pi`  
+`if \[ -f /etc/rpi-issue \]`  
+`    then`  
+`        raspberry=1`  
+`       # do pi specific stuff`  
+`    else`  
+`        raspberry=0`  
+`fi`  
+`# . . . Do other things , then, later in the script....`  
+`# Do something only if we're NOT on a pi`  
+`if \[ $raspberry -eq 0 \]`  
+`    then`  
+`       #...`  
+`fi`  
 
 * Raise amplitude if you're using HDMI
 
-`# Set audio for HDMI`
+`# Set audio for HDMI`  
+`amixer cset numid=3 2`  
+`amixer set PCM 87%`  
 
-`amixer cset numid=3 2`
+* If something goes wrong, you can use the script to reboot the pi, which is especially useful if you start the installation on boot. (Make sure you sleep somewhere in your scripts to avoid a reboot loop!)
 
-`amixer set PCM 87%`
+`sclang yourscript.scd || sudo shutdown -r now`
 
-
+If the scalng fails, the computer will reboot. (Note the bug fix in the 'headless' section below...)
 
 ## Start on boot
 
@@ -93,18 +82,14 @@ Do not use the start on boot instructions in the installation guide, as they don
 
 Create a file your\_installtion\_name.desktop . Put in it:
 
-`\[Desktop Entry\]`
-
-`Name=YourInstallationNameNoSpaces`
-
-`Exec=/home/pi/Documents/where/you/put/your/code/installation.sh`
-
-`Type=application`
+`\[Desktop Entry\]`  
+`Name=YourInstallationNameNoSpaces`  
+`Exec=/home/pi/Documents/where/you/put/your/code/installation.sh`  
+`Type=application`  
 
 This will tell the GUI to start your istallation. run the following commands:
 
-`mkdir ~/.config/autostart`
-
+`mkdir ~/.config/autostart`  
 `cp your\_installtion\_name.desktop ~/.config/autostart/`
 
 ### Headless
@@ -121,4 +106,47 @@ Replace it with:
 
 #### Autostarting
 
+You need to create an extra script in /etc/init.d:
 
+`#!/bin/sh`  
+`### BEGIN INIT INFO`  
+`# Provides:          your_installation`  
+`# Required-Start:    $local_fs`  
+`# Required-Stop:     $local_fs`  
+`# Default-Start:     2 3 4 5`  
+`# Default-Stop:      0 1 6`  
+`# Short-Description: Start/stop your_installation`  
+`### END INIT INFO`  
+` `  
+`# Set the USER variable to the name of the user to start your_installation under`  
+`export USER='pi'`  
+` `  
+`case "$1" in`  
+`  start)`  
+`    su $USER -c '/home/pi/Documents/where/you/put/your/code/installation.sh'`  
+`    echo "Starting your_installation"`  
+`    ;;`  
+`  stop)`  
+`    pkill installation.sh`  
+`    pkill keepAlive.sh`  
+`    pkill sclang`  
+`    pkill scsynth`  
+`    echo "YourInstallation stopped"`  
+`    ;;`  
+`  *)`  
+`    echo "Usage: /etc/init.d/your_installation {start|stop}"`  
+`    exit 1`  
+`    ;;`  
+`esac`  
+`exit 0`  
+
+Change the names and paths to reflect your actualy names and paths. Note that these names appear twice: once in the start section and once in the stop section.
+
+For the script above, named your_installation, we need to execute the following commands:
+
+* `sudo chmod 755 /etc/init.d/your_installation`
+* `sudo update-rc.d your_installation defaults`
+
+Note:
+* there is no .sh at the end of the script name
+* you may need to sudo to edit/create/copy into place the script
